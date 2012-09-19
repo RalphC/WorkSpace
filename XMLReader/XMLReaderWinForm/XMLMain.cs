@@ -27,7 +27,7 @@ namespace XMLReaderWinForm
             string[] FileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             using (FileStream myFS = new FileStream(FileList[0], FileMode.Open))
             {
-                using (StreamReader mySR = new StreamReader(myFS))
+                using (StreamReader mySR = new StreamReader(myFS, System.Text.Encoding.GetEncoding("GB2312")))
                 {
                     XMLTextBox.Text = mySR.ReadToEnd();
                 }
@@ -43,7 +43,16 @@ namespace XMLReaderWinForm
                 XMLTreeView.Nodes.Clear();
 
                 myXMLDoc = new XmlDocument();
-                myXMLDoc.Load(FileName);
+
+                using (FileStream myFS = new FileStream(FileName, FileMode.Open))
+                {
+                    using (StreamReader mySR = new StreamReader(myFS, System.Text.Encoding.GetEncoding("GB2312")))
+                    {
+                        myXMLDoc.Load(mySR);
+                    }
+                }
+                
+                
                 XMLTreeView.Nodes.Add(new TreeNode(myXMLDoc.DocumentElement.Name));
 
                 addTreeNode(myXMLDoc.DocumentElement, (TreeNode)XMLTreeView.Nodes[0]);
@@ -88,6 +97,13 @@ namespace XMLReaderWinForm
             OpenFileDialog myDialog = new OpenFileDialog();
             if (DialogResult.OK == myDialog.ShowDialog())
             {
+                using (FileStream myFS = new FileStream(myDialog.FileName, FileMode.Open))
+                {
+                    using (StreamReader mySR = new StreamReader(myFS, System.Text.Encoding.GetEncoding("GB2312")))
+                    {
+                        XMLTextBox.Text = mySR.ReadToEnd();
+                    }
+                }
                 CreateTreeview(myDialog.FileName);
             }
         }
