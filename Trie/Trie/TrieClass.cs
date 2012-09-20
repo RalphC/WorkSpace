@@ -32,7 +32,7 @@ namespace Trie
 
     class Trie
     {
-        TrieNode Head;
+        public TrieNode Head;
         int sum = 0, tempsum = 0;
  
         public Trie()
